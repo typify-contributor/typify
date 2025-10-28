@@ -1,2 +1,3 @@
-# typify
-Replication Package for Typify
+# Replication Package for Typify
+
+Formalizing. It will be available soon.
