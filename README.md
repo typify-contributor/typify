@@ -28,7 +28,7 @@ git clone https://github.com/typify-contributor/typify.git
 cd typify
 
 # Install
-pip install typify 
+pip install -e typify 
 ```
 ---
 
