@@ -8,7 +8,6 @@ from typify.utils.progbar import ProgressBar
 from typify.preprocessing.instance_utils import Instance
 from typify.preprocessing.module_meta import ModuleMeta
 from typify.preprocessing.core import GlobalContext
-from typify.preprocessing.sequencer import Sequencer
 from typify.preprocessing.symbol_table import (
 	Module, 
 	Package

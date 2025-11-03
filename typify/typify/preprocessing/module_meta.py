@@ -134,7 +134,7 @@ class ModuleMeta:
 	def __repr__(self):
 		return self.table.fqn
 	
-	def typeslots(self, key: str, topn: int, merge_buckets: bool = False):
+	def typeslots(self, topn: int, merge_buckets: bool = False):
 		def move_nones_to_end(lst):
 			return [x for x in lst if x != "None"] + [x for x in lst if x == "None"]
 
@@ -250,5 +250,5 @@ class ModuleMeta:
 					existing["type"] = truncate_types(existing["type"])
 			buckets = list(merged.values())
 
-		return {key: buckets}
+		return buckets
 

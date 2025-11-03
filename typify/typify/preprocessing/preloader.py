@@ -51,7 +51,7 @@ print(json.dumps(info))
 	def load(
 		cache_path: Path,
 		clear_cache: bool,
-		dont_cache: bool,
+		cache: bool,
 		config: dict[str, Union[str, list[str], dict[str, str]]], 
 		project_dir: Path
 	):
@@ -85,7 +85,7 @@ print(json.dumps(info))
 		inference = {k: Path(v.resolve().as_posix()) for k, v in inference.items()}
 		paths = [Path(p.resolve().as_posix()) for p in paths]
 
-		if dont_cache:
+		if not cache:
 			GlobalCache.blocked_libs.add(paths[0])
 		
 		if GlobalCache.blocked_libs:

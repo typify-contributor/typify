@@ -3,11 +3,13 @@ import json
 
 from pathlib import Path
 
+from typify import package_dir
 from typify.utils.logging import logger
 from typify.utils.progbar import ProgressBar
 from typify.utils.utils import Utils
 from typify.utils.caching import GlobalCache
 from typify.preprocessing.module_meta import ModuleMeta
+from typify.preprocessing.library_meta import LibraryMeta
 from typify.inferencing.commons import Builtins
 from typify.inferencing.typeutils import TypeUtils
 from typify.inferencing.executor import Executor
@@ -87,18 +89,15 @@ class Inferencer:
 		return corrected_sequences
 
 	@staticmethod
-	def infer(
-		outdir,
-		relative_to,
+	def preinfer(
 		usage_driven,
 		heur_driven,
-		topn
+		topn	
 	):
 		if (not usage_driven) and (not heur_driven):
 			usage_driven = True
 			heur_driven = True
 
-		start_time = time.time()
 		corrected_sequences = Inferencer._init_structures()
 		project_lib = next(iter(GlobalContext.libs.values()))
 		project_only_modules: set[ModuleMeta] = set(project_lib.meta_map.values())
@@ -111,7 +110,7 @@ class Inferencer:
 
 		total_counts = 0
 
-		typemap_path = Path("typify/typemap.json")
+		typemap_path = Path(f"{package_dir}/typemap.json")
 		if typemap_path.is_file():
 			with open(typemap_path, "r", encoding="utf-8") as f:
 				typemap = json.load(f)
@@ -126,15 +125,24 @@ class Inferencer:
 			)
 			progress.update()
 
-		project_lib.export_types_per_file(
-			output=outdir, 
-			relative_to=relative_to, 
+		inferred_types = project_lib.get_types_per_file(
 			topn=topn
 		)
 		logger.debug(f"{logger.emoji_map['ok']} [Inferencer] Preprocessed {total_modules} module(s)", trail=1)
 
 		if not usage_driven:
 			return
+		
+		return total_counts, project_lib, corrected_sequences, inferred_types
+
+	@staticmethod
+	def infer(
+		total_counts: int,
+		project_lib: LibraryMeta,
+		corrected_sequences: list[list[ModuleMeta]],
+		topn: int
+	):
+		start_time = time.time()
 
 		GlobalContext.progress_bar = ProgressBar(
 			total=total_counts,
@@ -244,9 +252,7 @@ class Inferencer:
 		logger.info(f"\t\tTime Taken: {end_time - start_time:.4f} seconds")
 		logger.info(f"\t\tProgress: {((GlobalContext.progress_bar.iteration / GlobalContext.progress_bar.total) * 100):.2f} percent")
 
-		project_lib.export_types_per_file(
-			output=outdir, 
-			relative_to=relative_to, 
+		inferred_types = project_lib.get_types_per_file(
 			topn=topn
 		)
-		logger.info(f"{logger.emoji_map['ok']} Exported types to: {outdir.as_posix()}")
+		return inferred_types

@@ -115,10 +115,12 @@ class GlobalCache:
 			last_progress=last_progress
 		)
 		buf = io.BytesIO()
-		pickle.dump(inference_cache, buf)
-
-		GlobalCache.staged_contexts.append((context_id, last_modified, buf.getvalue()))
-
+		
+		try:
+			pickle.dump(inference_cache, buf)
+			GlobalCache.staged_contexts.append((context_id, last_modified, buf.getvalue()))
+		except Exception as e:
+			logger.debug(f"{logger.emoji_map['warn']} [Cache] Failed to stage inference context: {e}")
 	@staticmethod
 	def flush_inference_contexts(cache_path: Path):
 		if not GlobalCache.staged_contexts:
