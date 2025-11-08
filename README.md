@@ -39,7 +39,7 @@ In the `typify` directory, there is a sample project named `sample_project`:
 We can run Typify on it as follows:
 
 ```bash
-typify infer sample_project
+typify project sample_project
 ```
 
 After completion, Typify will output inferred types in JSON format under the `sample_project/.typify/` directory. Use `typify infer --help` for more options.

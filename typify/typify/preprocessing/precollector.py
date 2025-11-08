@@ -1,10 +1,8 @@
 from typing import Union, Optional
 import ast
-import re
 from typing import Any
 from typify.preprocessing.module_meta import ModuleMeta
 from typify.preprocessing.typeexpr import TypeExpr, parse_typeexpr
-
 
 class PreCollector(ast.NodeVisitor):
 
@@ -80,10 +78,7 @@ class PreCollector(ast.NodeVisitor):
 			try:
 				self._priority_types_canon.append(str(parse_typeexpr(s).canonical()))
 			except Exception:
-				# Fallback: keep given string if parsing fails
 				self._priority_types_canon.append(s)
-
-	# ---------- utilities ----------
 
 	def _format_fqn(self) -> str:
 		return ".".join(self.scope_stack)
@@ -134,7 +129,6 @@ class PreCollector(ast.NodeVisitor):
 		for p in self._BOOL_PREFIXES:
 			if low.startswith(p):
 				return TypeExpr("bool")
-		# Only Pascal/camel are considered plausible user-defined/class types
 		if self._looks_like_type(name):
 			return TypeExpr(name)
 
@@ -171,11 +165,9 @@ class PreCollector(ast.NodeVisitor):
 		if target in self._imported_names:
 			orig = self._imported_names[target]
 			base = orig.split(".")[-1]
-			# Only treat imported symbol as a type if it looks like Pascal/camel
 			if self._looks_like_type(base):
 				return TypeExpr(orig)
-			# otherwise fall through to other heuristics
-		# Camel/Pascal or camel-case callable name → treat as type constructor
+
 		if self._looks_like_type(target):
 			return TypeExpr(target)
 		if name_hint:
@@ -263,17 +255,8 @@ class PreCollector(ast.NodeVisitor):
 		return self.DEFAULT_GUESS
 
 	def _infer_param_type(self, arg: ast.arg, default_expr: Optional[ast.AST]) -> TypeExpr:
-		# annotation wins
-		if arg.annotation is not None:
-			try:
-				ann = ast.unparse(arg.annotation).strip()
-			except Exception:
-				return self.DEFAULT_GUESS
-			return parse_typeexpr(ann)
-
 		name = arg.arg
 
-		# self/cls type hints: treat enclosing name as type if present
 		if self.scope_stack:
 			enclosing = self.scope_stack[-1] if self.scope_stack else None
 			if name == "self" and enclosing:
@@ -376,13 +359,8 @@ class PreCollector(ast.NodeVisitor):
 				elif isinstance(s, ast.Assign):
 					handle_assign(s.targets, s.value, env)
 				elif isinstance(s, ast.AnnAssign):
-					if s.annotation is not None:
-						try:
-							t = parse_typeexpr(ast.unparse(s.annotation).strip())
-						except Exception:
-							t = self._guess_from_expr(s.value, env=env) if s.value else self.DEFAULT_GUESS
-					else:
-						t = self._guess_from_expr(s.value, env=env) if s.value else self.DEFAULT_GUESS
+					# Ignore the annotation, just infer from the value
+					t = self._guess_from_expr(s.value, env=env) if s.value else self.DEFAULT_GUESS
 					assign_to_env(s.target, t, env)
 				elif isinstance(s, ast.AugAssign):
 					name_hint = ast.unparse(s.target)
@@ -422,16 +400,13 @@ class PreCollector(ast.NodeVisitor):
 		walk_block(node.body, env0)
 
 		if returns:
-			# dominant type heuristic (by base-string equality to mirror prior behavior)
 			counts: dict[str, int] = {}
 			for c in returns:
 				key = str(c.canonical())
 				counts[key] = counts.get(key, 0) + 1
 			items = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0] == "None"))
-			# return TypeExpr of the winning key
 			return parse_typeexpr(items[0][0]) if items else self.DEFAULT_GUESS
 
-		# No explicit returns observed; use name hints
 		lowname = node.name.lower()
 		if lowname.startswith(("is_", "has_", "can_", "should_")):
 			return TypeExpr("bool")
@@ -440,8 +415,6 @@ class PreCollector(ast.NodeVisitor):
 		if lowname.startswith(("get_", "find_", "read_", "load_", "fetch_")):
 			return self.DEFAULT_GUESS
 		return TypeExpr("None")
-
-	# ---------- helpers to build ordered type lists ----------
 
 	def _to_canon_str(self, te: TypeExpr) -> str:
 		return str(te.canonical())
@@ -466,8 +439,6 @@ class PreCollector(ast.NodeVisitor):
 			out = out[:max(1, self.topn)]
 		return out
 
-	# ---------- import collection ----------
-
 	def visit_Import(self, node: ast.Import):
 		# only needed for inference
 		if not (self.typeslots and self.infer):
@@ -483,31 +454,21 @@ class PreCollector(ast.NodeVisitor):
 			export = alias.asname or alias.name
 			self._imported_names[export] = alias.name
 
-	# ---------- variable slots ----------
-
 	def visit_AnnAssign(self, node: ast.AnnAssign):
 		from typify.preprocessing.instance_utils import ReferenceSet, VSlot
 		fqn = self._format_fqn()
 		position = (node.target.lineno, node.target.col_offset)
 
-		if self.typeslots or not self.in_function:
+		if self.typeslots:
 			self.module_meta.count_map[position] = 1
 
-		# Predict h_type only if requested
 		h_type: list[str] = []
 		if self.typeslots and self.infer:
-			if node.annotation is not None:
-				try:
-					ann_str = ast.unparse(node.annotation).strip()
-					ann_te = parse_typeexpr(ann_str)
-				except Exception:
-					ann_te = self.DEFAULT_GUESS
+			env = self._local_env_stack[-1] if (self.in_function and self._local_env_stack) else None
+			if node.value is not None:
+				ann_te = self._guess_from_expr(node.value, name_hint=ast.unparse(node.target), env=env)
 			else:
-				env = self._local_env_stack[-1] if (self.in_function and self._local_env_stack) else None
-				if node.value is not None:
-					ann_te = self._guess_from_expr(node.value, name_hint=ast.unparse(node.target), env=env)
-				else:
-					ann_te = self.DEFAULT_GUESS
+				ann_te = self.DEFAULT_GUESS
 			h_type = self._build_type_list(ann_te)
 
 		vslot = VSlot(
@@ -521,7 +482,6 @@ class PreCollector(ast.NodeVisitor):
 			self.module_meta.register_vslot(position, vslot)
 		self.module_meta.register_vslot_snapshot(position, vslot)
 
-		# update local env if inside function
 		if self.in_function and self._local_env_stack and h_type:
 			self._assign_target_env(node.target, parse_typeexpr(h_type[0]))
 
@@ -530,7 +490,7 @@ class PreCollector(ast.NodeVisitor):
 		fqn = self._format_fqn()
 		position = (node.target.lineno, node.target.col_offset)
 
-		if self.typeslots or not self.in_function:
+		if self.typeslots:
 			self.module_meta.count_map[position] = 1
 
 		h_type: list[str] = []
@@ -561,7 +521,7 @@ class PreCollector(ast.NodeVisitor):
 		for bigtarget in node.targets:
 			packs = PreCollector.collect_targets(bigtarget)
 			for target, position in packs.items():
-				if self.typeslots or not self.in_function:
+				if self.typeslots:
 					self.module_meta.count_map[position] = 1
 
 				h_type: list[str] = []
@@ -601,8 +561,6 @@ class PreCollector(ast.NodeVisitor):
 				if self.in_function and self._local_env_stack and h_type:
 					self._assign_target_env(target, parse_typeexpr(h_type[0]))
 
-	# ---------- classes & functions ----------
-
 	def visit_ClassDef(self, node: ast.ClassDef):
 		if not hasattr(self, "_class_stack"):
 			self._class_stack = []
@@ -619,11 +577,9 @@ class PreCollector(ast.NodeVisitor):
 		position = (node.lineno, node.col_offset)
 		h_params = PreCollector.collect_parameter_slots(node)
 
-		# If we need to infer types for parameters/return
 		h_ret: list[str] = []
 		if self.typeslots and self.infer:
 			args_node = node.args
-			# defaults aligned with args
 			pos_defaults = [None] * (len(args_node.args) - len(args_node.defaults)) + list(args_node.defaults)
 			posonly_defaults = [None] * len(args_node.posonlyargs)
 			kw_defaults = list(args_node.kw_defaults)
@@ -644,24 +600,14 @@ class PreCollector(ast.NodeVisitor):
 				te = self._infer_param_type(args_node.kwarg, None) or TypeExpr("dict")
 				h_params[args_node.kwarg.arg] = self._build_type_list(te)
 
-			# prepare local env for body analysis
 			self._local_env_stack.append({})
-			# compute return annotation using alias-aware walk
-			if node.returns is not None:
-				try:
-					return_ann_str = ast.unparse(node.returns).strip()
-					return_ann_te = parse_typeexpr(return_ann_str) if return_ann_str else self._gather_return_guesses(node)
-				except Exception:
-					return_ann_te = self._gather_return_guesses(node)
-			else:
-				return_ann_te = self._gather_return_guesses(node)
+			return_ann_te = self._gather_return_guesses(node)
 			h_ret = self._build_type_list(return_ann_te)
 		else:
-			# still push empty env to allow visit_* to check stack presence
 			self._local_env_stack.append({}) if self.infer else None
 
-		if self.typeslots or not self.in_function:
-			self.module_meta.count_map[position] = 2 if self.typeslots else 1
+		if self.typeslots:
+			self.module_meta.count_map[position] = 1
 
 		fslot = FSlot(
 			scope=scope,
@@ -679,12 +625,10 @@ class PreCollector(ast.NodeVisitor):
 		self.scope_stack.append(node.name)
 		prev_in_function = self.in_function
 		self.in_function = True
-		# traverse function body
 		self.generic_visit(node)
 		self.in_function = prev_in_function
 		self.scope_stack.pop()
 
-		# pop local env if we pushed it
 		if self._local_env_stack:
 			self._local_env_stack.pop()
 

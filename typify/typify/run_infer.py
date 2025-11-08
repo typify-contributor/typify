@@ -2,6 +2,7 @@ import subprocess
 import tempfile
 import json
 
+from tqdm import tqdm
 from pathlib import Path
 
 from typify import stubs_dir
@@ -49,6 +50,7 @@ def find_python_projects(root: Path) -> list[str]:
 			seen.add(p)
 
 	return uniq
+
 
 def run_project(
 	project_dir,
@@ -126,147 +128,255 @@ def run_project(
 		joined = ", ".join(repr(dep) for dep in deps)
 		logger.info(f"   {repr(meta)} ➜ [{joined}]")
 
-	total_counts, project_lib, corrected_sequences, inferred_types =  Inferencer.preinfer(
-		usage_driven=usage,
-		heur_driven=heur,
-		topn=topn
-	)
+	if not usage and not heur:
+		usage = True
+		heur = True
 
-	inferred_types = Inferencer.infer(
-		total_counts=total_counts,
-		project_lib=project_lib,
-		corrected_sequences=corrected_sequences,
-		topn=topn,
-	)
+	total_counts, project_lib, corrected_sequences, inferred_types = Inferencer.preinfer(heur_driven=heur, topn=topn)
 
-	if GlobalCache.staged_contexts:
-		GlobalCache.flush_inference_contexts(cache_path)
-		logger.debug(f"{logger.emoji_map['ok']} [Cache] Flushed staged contexts to disk.", trail=1)
+	if usage:
+		inferred_types = Inferencer.infer(
+			total_counts=total_counts,
+			project_lib=project_lib,
+			corrected_sequences=corrected_sequences,
+			topn=topn,
+		)
+
+		if GlobalCache.staged_contexts:
+			GlobalCache.flush_inference_contexts(cache_path)
+			logger.debug(f"{logger.emoji_map['ok']} [Cache] Flushed staged contexts to disk.", trail=1)
 
 	logger.close()
 	return inferred_types
 
-def inferp(
-    project_dir,
-    output_types=None,
-    output_log=None,
-    log_level="off",
-    clear_cache=False,
-    prune_cache=False,
-    cache=False,
-    heur=False,
-    usage=False,
-    topn=1,
-    cache_dir="{auto}",
-    paths=(f"{stubs_dir}/stdlib/",),
+
+def infer_project(
+	project_dir,
+	output_types=None,
+	output_log=None,
+	log_level="off",
+	clear_cache=False,
+	prune_cache=False,
+	cache=False,
+	heur=False,
+	usage=False,
+	topn=1,
+	cache_dir="{auto}",
+	paths=(f"{stubs_dir}/stdlib/",),
 ):
-    config = {
-        "cache_dir": cache_dir,
-        "paths": list(paths),
-    }
+	config = {
+		"cache_dir": cache_dir,
+		"paths": list(paths),
+	}
 
-    project_dir = Path(project_dir).resolve()
+	project_dir = Path(project_dir).resolve()
+	outdir = None
 
-    if output_types is None or output_log is None:
-        outdir = project_dir / ".typify"
-        outdir.mkdir(parents=True, exist_ok=True)
-    else:
-        outdir = None
+	# Only create .typify if we’re actually going to write something inside it
+	if (output_types is None) or (log_level.lower() != "off" and output_log is None):
+		outdir = project_dir / ".typify"
+		outdir.mkdir(parents=True, exist_ok=True)
 
-    output_types = (
-        (outdir / "types.json") if output_types is None else Path(output_types).resolve()
-    )
-    output_log = (
-        (outdir / "typify.log") if output_log is None else Path(output_log).resolve()
-    )
+	# Decide final output file paths
+	output_types = (
+		(outdir / "types.json") if output_types is None else Path(output_types).resolve()
+	)
 
-    inferred_project = run_project(
-        project_dir=project_dir,
-        output_log=output_log,
-        log_level=log_level,
-        clear_cache=clear_cache,
-        prune_cache=prune_cache,
-        cache=cache,
-        heur=heur,
-        usage=usage,
-        topn=topn,
-        config=config,
-    )
+	if log_level.lower() != "off":
+		output_log = (
+			(outdir / "typify.log") if output_log is None else Path(output_log).resolve()
+		)
+	else:
+		output_log = None
 
-    with open(output_types, "w", encoding="utf-8") as f:
-        json.dump(inferred_project, f, indent="\t")
+	# Run inference
+	inferred_project = run_project(
+		project_dir=project_dir,
+		output_log=output_log,
+		log_level=log_level,
+		clear_cache=clear_cache,
+		prune_cache=prune_cache,
+		cache=cache,
+		heur=heur,
+		usage=usage,
+		topn=topn,
+		config=config,
+	)
 
-def infer(
-    repo_dir,
-    output_types=None,
-    output_log=None,
-    log_level="off",
-    clear_cache=False,
-    prune_cache=False,
-    cache=False,
-    heur=False,
-    usage=False,
-    topn=1,
-    cache_dir="{auto}",
-    paths=(f"{stubs_dir}/stdlib/",),
+	# Write results
+	with open(output_types, "w", encoding="utf-8") as f:
+		json.dump(inferred_project, f, indent="\t")
+
+	# Optional: remove .typify if it’s empty
+	if outdir and outdir.exists() and not any(outdir.iterdir()):
+		outdir.rmdir()
+
+
+def infer_repo(
+	repo_dir,
+	output_types=None,
+	output_log=None,
+	log_level="off",
+	clear_cache=False,
+	prune_cache=False,
+	cache=False,
+	heur=False,
+	usage=False,
+	topn=1,
+	cache_dir="{auto}",
+	paths=(f"{stubs_dir}/stdlib/",),
 ):
-    repo_dir = Path(repo_dir).resolve()
+	repo_dir = Path(repo_dir).resolve()
 
-    if not Utils.is_valid_directory(repo_dir):
-        print("Invalid repository path given.")
-        exit(1)
+	if not Utils.is_valid_directory(repo_dir):
+		print("Invalid repository path given.")
+		exit(1)
 
-    projects = find_python_projects(repo_dir)
-    all_inferred: dict = {}
+	projects = find_python_projects(repo_dir)
+	all_inferred: dict = {}
+	outdir = None
 
-    outdir = repo_dir / ".typify"
-    outdir.mkdir(parents=True, exist_ok=True)
-    output_types = outdir / "types.json" if output_types is None else Path(output_types).resolve()
-    output_log = outdir / "typify.log" if output_log is None else Path(output_log).resolve()
+	# Only create .typify if we’ll actually write to it
+	if (output_types is None) or (log_level.lower() != "off" and output_log is None):
+		outdir = repo_dir / ".typify"
+		outdir.mkdir(parents=True, exist_ok=True)
 
-    for project in projects:
-        print(f"Running inference on project: {project}")
+	output_types = outdir / "types.json" if output_types is None else Path(output_types).resolve()
+	output_log = (
+		outdir / "typify.log" if (log_level.lower() != "off" and output_log is None)
+		else (Path(output_log).resolve() if output_log else None)
+	)
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_types = Path(temp_dir) / "types.json"
-            temp_log = Path(temp_dir) / "typify.log"
+	for project in projects:
+		print(f"Running inference on project: {project}")
 
-            cmd = [
-                "typify", "inferp", project,
-                "--output-types", str(temp_types),
-                "--output-log", str(temp_log),
-                "--log-level", log_level,
-                "--topn", str(topn),
-                "--cache-dir", cache_dir,
-            ]
+		with tempfile.TemporaryDirectory() as temp_dir:
+			temp_types = Path(temp_dir) / "types.json"
+			temp_log = Path(temp_dir) / "typify.log"
 
-            for p in paths:
-                cmd.extend(["--paths", p])
+			cmd = [
+				"typify", "project", project,
+				"--output-types", str(temp_types),
+				"--log-level", log_level,
+				"--topn", str(topn),
+				"--cache-dir", cache_dir,
+			]
 
-            if clear_cache:
-                cmd.append("--clear-cache")
-            if prune_cache:
-                cmd.append("--prune-cache")
-            if cache:
-                cmd.append("--cache")
-            if heur:
-                cmd.append("--heur")
-            if usage:
-                cmd.append("--usage")
+			if log_level.lower() != "off":
+				cmd.extend(["--output-log", str(temp_log)])
 
-            subprocess.run(cmd, check=True)
+			for p in paths:
+				cmd.extend(["--paths", p])
 
-            with open(temp_types, "r", encoding="utf-8") as f:
-                project_types = json.load(f)
-                all_inferred.update(project_types)
+			if clear_cache: cmd.append("--clear-cache")
+			if prune_cache: cmd.append("--prune-cache")
+			if cache: cmd.append("--cache")
+			if heur: cmd.append("--heur")
+			if usage: cmd.append("--usage")
 
-            with open(temp_log, "r", encoding="utf-8") as f:
-                log_contents = f.read()
-            with open(output_log, "a", encoding="utf-8") as out_log:
-                out_log.write(f"Log for project: {project}\n")
-                out_log.write(log_contents)
-                out_log.write("\n\n")
+			subprocess.run(cmd, check=True)
 
-    with open(output_types, "w", encoding="utf-8") as f:
-        json.dump(all_inferred, f, indent="\t")
+			with open(temp_types, "r", encoding="utf-8") as f:
+				project_types = json.load(f)
+				all_inferred.update(project_types)
 
+			if log_level.lower() != "off":
+				with open(temp_log, "r", encoding="utf-8") as f:
+					log_contents = f.read()
+				with open(output_log, "a", encoding="utf-8") as out_log:
+					out_log.write(f"Log for project: {project}\n")
+					out_log.write(log_contents)
+					out_log.write("\n\n")
+
+	with open(output_types, "w", encoding="utf-8") as f:
+		json.dump(all_inferred, f, indent="\t")
+
+	# Optional cleanup
+	if outdir and outdir.exists() and not any(outdir.iterdir()):
+		outdir.rmdir()
+
+def infer_dataset(
+	dataset_dir,
+	output_types=None,
+	output_log=None,
+	log_level="off",
+	clear_cache=False,
+	prune_cache=False,
+	cache=False,
+	heur=False,
+	usage=False,
+	topn=1,
+	cache_dir="{auto}",
+	paths=(),
+):
+	dataset_dir = Path(dataset_dir).resolve()
+	all_types = {}
+	outdir = None
+
+	# Only create .typify if outputs/logs will go there
+	if (output_types is None) or (log_level.lower() != "off" and output_log is None):
+		outdir = dataset_dir / ".typify"
+		outdir.mkdir(parents=True, exist_ok=True)
+
+	output_types = outdir / "types.json" if output_types is None else Path(output_types).resolve()
+	output_log = (
+		outdir / "typify.log" if (log_level.lower() != "off" and output_log is None)
+		else (Path(output_log).resolve() if output_log else None)
+	)
+
+	repos = []
+	for author_dir in dataset_dir.iterdir():
+		if not author_dir.is_dir():
+			continue
+		for repo_dir in author_dir.iterdir():
+			if repo_dir.is_dir():
+				repos.append((author_dir, repo_dir))
+
+	with tqdm(total=len(repos), desc="Inferring types", ascii=(' ', '━'), unit="repo", bar_format="{desc}: [{bar:50}] {n_fmt}/{total_fmt}") as pbar:
+		for author_dir, repo_dir in repos:
+			with tempfile.TemporaryDirectory() as tmp:
+				temp_types = Path(tmp) / "types.json"
+				temp_log = Path(tmp) / "typify.log"
+
+				cmd = [
+					"typify", "repo", str(repo_dir),
+					"--output-types", str(temp_types),
+					"--log-level", log_level,
+					"--topn", str(topn),
+					"--cache-dir", cache_dir,
+				]
+				if log_level.lower() != "off":
+					cmd.extend(["--output-log", str(temp_log)])
+				for p in paths:
+					cmd.extend(["--paths", p])
+				if clear_cache: cmd.append("--clear-cache")
+				if prune_cache: cmd.append("--prune-cache")
+				if cache: cmd.append("--cache")
+				if heur: cmd.append("--heur")
+				if usage: cmd.append("--usage")
+
+				subprocess.run(
+					cmd,
+					check=True,
+					stdout=subprocess.DEVNULL,
+					stderr=subprocess.DEVNULL,
+				)
+
+				with open(temp_types, "r", encoding="utf-8") as f:
+					repo_types = json.load(f)
+					all_types.update(repo_types)
+
+				if log_level.lower() != "off":
+					with open(temp_log, "r", encoding="utf-8") as f:
+						repo_log = f.read()
+					with open(output_log, "a", encoding="utf-8") as outlog:
+						outlog.write(f"===== Log for {author_dir.name}/{repo_dir.name} =====\n")
+						outlog.write(repo_log + "\n\n")
+
+			pbar.update(1)
+
+	with open(output_types, "w", encoding="utf-8") as f:
+		json.dump(all_types, f, indent="\t")
+
+	if outdir and outdir.exists() and not any(outdir.iterdir()):
+		outdir.rmdir()

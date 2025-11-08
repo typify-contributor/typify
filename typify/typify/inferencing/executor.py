@@ -397,7 +397,6 @@ class Executor(ast.NodeVisitor):
 		)
 
 		self.module_meta.register_fslot_snapshot(position, fslot)
-		self.module_meta.update_count_map(position)
 
 		if not isinstance(self.namespace, CallFrame):
 			func_obj = GlobalContext.function_object_map.setdefault(

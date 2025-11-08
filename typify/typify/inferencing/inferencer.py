@@ -89,15 +89,7 @@ class Inferencer:
 		return corrected_sequences
 
 	@staticmethod
-	def preinfer(
-		usage_driven,
-		heur_driven,
-		topn	
-	):
-		if (not usage_driven) and (not heur_driven):
-			usage_driven = True
-			heur_driven = True
-
+	def preinfer(heur_driven: bool, topn: int):
 		corrected_sequences = Inferencer._init_structures()
 		project_lib = next(iter(GlobalContext.libs.values()))
 		project_only_modules: set[ModuleMeta] = set(project_lib.meta_map.values())
@@ -128,10 +120,8 @@ class Inferencer:
 		inferred_types = project_lib.get_types_per_file(
 			topn=topn
 		)
-		logger.debug(f"{logger.emoji_map['ok']} [Inferencer] Preprocessed {total_modules} module(s)", trail=1)
 
-		if not usage_driven:
-			return
+		logger.debug(f"{logger.emoji_map['ok']} [Inferencer] Preprocessed {total_modules} module(s)", trail=1)
 		
 		return total_counts, project_lib, corrected_sequences, inferred_types
 

@@ -41,7 +41,10 @@ class ModuleMeta:
 			PreCollector(typemap, self, typeslots, infer, topn).visit(self.tree)
 		except (RecursionError, UnicodeError):
 			pass
-		return sum(self.count_map.values())
+
+		if typeslots:
+			return sum(self.count_map.values())
+		return 0
 
 	def snapshot(self) -> tuple[dict, dict]:
 		hashable_funcslots = {}
@@ -61,7 +64,7 @@ class ModuleMeta:
 
 	def update_count_map(self, position: tuple[int, int]):
 		from typify.preprocessing.core import GlobalContext
-		if self.count_map[position] > 0:
+		if self.count_map.get(position, 0) > 0:
 			self.count_map[position] -= 1
 			GlobalContext.progress_bar.update()
 
