@@ -49,7 +49,7 @@ After completion, Typify will output inferred types in JSON format under the `sa
 ## Development Notes
 
 - Requires **Python 3.9+** environment
-- It will work on any OS, but it is explicitly tested on **Ubuntu 22.04 / Debian 12 / WSL2 / Windows 11**
+- Compatible with **Linux / MacOS / Windows**
 - Compatible with both local and large-scale dataset runs
 
 ---

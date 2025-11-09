@@ -313,7 +313,6 @@ def infer_dataset(
 	all_types = {}
 	outdir = None
 
-	# Only create .typify if outputs/logs will go there
 	if (output_types is None) or (log_level.lower() != "off" and output_log is None):
 		outdir = dataset_dir / ".typify"
 		outdir.mkdir(parents=True, exist_ok=True)
@@ -332,7 +331,13 @@ def infer_dataset(
 			if repo_dir.is_dir():
 				repos.append((author_dir, repo_dir))
 
-	with tqdm(total=len(repos), desc="Inferring types", ascii=(' ', '━'), unit="repo", bar_format="{desc}: [{bar:50}] {n_fmt}/{total_fmt}") as pbar:
+	with tqdm(
+		total=len(repos), 
+		desc="Inferring types", 
+		ascii=(' ', '━'), 
+		unit="repo", 
+		bar_format="{desc}: [{bar:50}] {n_fmt}/{total_fmt}"
+	) as pbar:
 		for author_dir, repo_dir in repos:
 			with tempfile.TemporaryDirectory() as tmp:
 				temp_types = Path(tmp) / "types.json"
