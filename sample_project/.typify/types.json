@@ -1,0 +1,1494 @@
+{
+	"/home/ali/dev/typify-replication-package/typify/sample_project/main.py": [
+		{
+			"category": "variable",
+			"scope": "Neo4jAbstractQuery.__init__",
+			"name": "self.labels",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					12,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "self.query_params",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					22,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "self.chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					23,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jImportQuery.__call__",
+			"name": "result",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					27,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "query_params",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					38,
+					12
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "self.query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					39,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "self.query_params",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					40,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "self.chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					41,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jBatchQuery.__call__",
+			"name": "result",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					45,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "query_params",
+			"type": [
+				"dict"
+			],
+			"locations": [
+				[
+					55,
+					12
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "self.query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					56,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "self.query_params",
+			"type": [
+				"dict"
+			],
+			"locations": [
+				[
+					57,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jGenericQuery.__call__",
+			"name": "result",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					61,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jQueryFactory.__init__",
+			"name": "self.default_labels",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					69,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jQueryInvoker.__init__",
+			"name": "self.neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					106,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jQueryInvoker.run",
+			"name": "results",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					109,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jQueryAsyncInvoker.__init__",
+			"name": "self.executor",
+			"type": [
+				"ThreadPoolExecutor"
+			],
+			"locations": [
+				[
+					122,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "Neo4jQueryAsyncInvoker.run",
+			"name": "fs",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					126,
+					8
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jAbstractQuery.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					11,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jAbstractQuery.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jAbstractQuery"
+			],
+			"locations": [
+				[
+					11,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jAbstractQuery.__init__",
+			"name": "labels",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					11,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jAbstractQuery.__call__",
+			"name": "__call__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					14,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jAbstractQuery.__call__",
+			"name": "self",
+			"type": [
+				"Neo4jAbstractQuery"
+			],
+			"locations": [
+				[
+					14,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jAbstractQuery.__call__",
+			"name": "neo_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					14,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					19,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jImportQuery"
+			],
+			"locations": [
+				[
+					19,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "query_params",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					19,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					19,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__init__",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					19,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jImportQuery.__call__",
+			"name": "__call__",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					26,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__call__",
+			"name": "self",
+			"type": [
+				"Neo4jImportQuery"
+			],
+			"locations": [
+				[
+					26,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jImportQuery.__call__",
+			"name": "neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					26,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jBatchQuery"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "query_params",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__init__",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					34,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jBatchQuery.__call__",
+			"name": "__call__",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					44,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__call__",
+			"name": "self",
+			"type": [
+				"Neo4jBatchQuery"
+			],
+			"locations": [
+				[
+					44,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jBatchQuery.__call__",
+			"name": "neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					44,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					53,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jGenericQuery"
+			],
+			"locations": [
+				[
+					53,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					53,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "query_params",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					53,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__init__",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					53,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jGenericQuery.__call__",
+			"name": "__call__",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					60,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__call__",
+			"name": "self",
+			"type": [
+				"Neo4jGenericQuery"
+			],
+			"locations": [
+				[
+					60,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jGenericQuery.__call__",
+			"name": "neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					60,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryFactory.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					68,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jQueryFactory"
+			],
+			"locations": [
+				[
+					68,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.__init__",
+			"name": "default_labels",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					68,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "query",
+			"type": [
+				"Neo4jGenericQuery"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "self",
+			"type": [
+				"Neo4jQueryFactory"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "labels",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "query_params",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.query",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					71,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "import_query",
+			"type": [
+				"Neo4jImportQuery"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "self",
+			"type": [
+				"Neo4jQueryFactory"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "labels",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "query_params",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.import_query",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					81,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "batch_query",
+			"type": [
+				"Neo4jBatchQuery"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "self",
+			"type": [
+				"Neo4jQueryFactory"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "query_text",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "labels",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "query_params",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "chunk_size",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryFactory.batch_query",
+			"name": "kwargs",
+			"type": [
+				"dict[str, Any]"
+			],
+			"locations": [
+				[
+					91,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryInvoker.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					105,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryInvoker.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jQueryInvoker"
+			],
+			"locations": [
+				[
+					105,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryInvoker.__init__",
+			"name": "neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					105,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryInvoker.run",
+			"name": "run",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					108,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryInvoker.run",
+			"name": "self",
+			"type": [
+				"Neo4jQueryInvoker"
+			],
+			"locations": [
+				[
+					108,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryInvoker.run",
+			"name": "queries",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					108,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryAsyncInvoker.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					119,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryAsyncInvoker.__init__",
+			"name": "self",
+			"type": [
+				"Neo4jQueryAsyncInvoker"
+			],
+			"locations": [
+				[
+					119,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryAsyncInvoker.__init__",
+			"name": "neo4j_client",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					119,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryAsyncInvoker.__init__",
+			"name": "max_workers",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					119,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "Neo4jQueryAsyncInvoker.run",
+			"name": "run",
+			"type": [
+				"list"
+			],
+			"locations": [
+				[
+					125,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryAsyncInvoker.run",
+			"name": "self",
+			"type": [
+				"Neo4jQueryAsyncInvoker"
+			],
+			"locations": [
+				[
+					125,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "Neo4jQueryAsyncInvoker.run",
+			"name": "queries",
+			"type": [
+				"tuple"
+			],
+			"locations": [
+				[
+					125,
+					4
+				]
+			]
+		}
+	],
+	"/home/ali/dev/typify-replication-package/typify/sample_project/module_a.py": [
+		{
+			"category": "variable",
+			"scope": "AClass.__init__",
+			"name": "self.name",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					6,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "func_a",
+			"name": "y",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					14,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "AClass.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "AClass.__init__",
+			"name": "self",
+			"type": [
+				"AClass"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "AClass.__init__",
+			"name": "name",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "AClass.show",
+			"name": "show",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					8,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "AClass.show",
+			"name": "self",
+			"type": [
+				"AClass"
+			],
+			"locations": [
+				[
+					8,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "func_a",
+			"name": "func_a",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					12,
+					0
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "func_a",
+			"name": "x",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					12,
+					0
+				]
+			]
+		}
+	],
+	"/home/ali/dev/typify-replication-package/typify/sample_project/module_b.py": [
+		{
+			"category": "variable",
+			"scope": "BClass.__init__",
+			"name": "self.value",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					6,
+					8
+				]
+			]
+		},
+		{
+			"category": "variable",
+			"scope": "BClass.compute",
+			"name": "result",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					10,
+					8
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "BClass.__init__",
+			"name": "__init__",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "BClass.__init__",
+			"name": "self",
+			"type": [
+				"BClass"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "BClass.__init__",
+			"name": "value",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					5,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "BClass.compute",
+			"name": "compute",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					8,
+					4
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "BClass.compute",
+			"name": "self",
+			"type": [
+				"BClass"
+			],
+			"locations": [
+				[
+					8,
+					4
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "func_b",
+			"name": "func_b",
+			"type": [
+				"int"
+			],
+			"locations": [
+				[
+					15,
+					0
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "func_b",
+			"name": "y",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					15,
+					0
+				]
+			]
+		}
+	],
+	"/home/ali/dev/typify-replication-package/typify/sample_project/utils.py": [
+		{
+			"category": "return",
+			"scope": "greet",
+			"name": "greet",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					1,
+					0
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "greet",
+			"name": "name",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					1,
+					0
+				]
+			]
+		},
+		{
+			"category": "return",
+			"scope": "farewell",
+			"name": "farewell",
+			"type": [
+				"None"
+			],
+			"locations": [
+				[
+					4,
+					0
+				]
+			]
+		},
+		{
+			"category": "argument",
+			"scope": "farewell",
+			"name": "name",
+			"type": [
+				"str"
+			],
+			"locations": [
+				[
+					4,
+					0
+				]
+			]
+		}
+	]
+}

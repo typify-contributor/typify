@@ -138,29 +138,6 @@ class LibraryMeta:
 		
 		progress.update(len(self.meta_map) + 1)
 
-	def export_types_per_proj(self, output: Path):
-		progress = ProgressBar(
-			len(self.meta_map) + 1, 
-			prefix="Exporting Types",
-			progress_format="percent"
-		)
-		progress.display()
-		
-		data = {}
-		for i, meta in enumerate(self.meta_map.values(), 1):
-			data[str(meta.src.as_posix())] = meta.typeslots()
-			progress.update(i)
-		
-		sorted_data = OrderedDict()
-		sorted_data["project_path"] = str(self.src.as_posix())
-		for k in sorted(data):
-			sorted_data[k] = data[k]
-		
-		with output.open("w", encoding="utf-8") as f:
-			json.dump(sorted_data, f, indent='\t', ensure_ascii=False)
-		
-		progress.update(len(self.meta_map) + 1)
-	
 	def get_types_per_file(self, topn: int):
 		progress = ProgressBar(
 			len(self.meta_map) + 1,
@@ -171,9 +148,10 @@ class LibraryMeta:
 
 		data = {}
 		for i, meta in enumerate(self.meta_map.values(), 1):
-
 			src_rel_path = meta.src.as_posix()
-			data[src_rel_path] = meta.typeslots(topn=topn)
+			result = meta.typeslots(topn=topn, merge_buckets=True)
+			if result:
+				data[src_rel_path] = result
 
 			progress.update(i)
 

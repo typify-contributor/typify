@@ -1,25 +1,31 @@
-# Replication Package for Typify
+# Typify — Replication Package (Updated)
 
-Typify is a **usage-driven static type inference engine** for Python that automatically predicts precise type annotations for variables, parameters, and return values - even in unannotated codebases.  
-It performs multi-pass analysis with **call-site driven inference**, **recursive fixpoint resolution**, and **accumulative type unification**, producing high-fidelity inferred annotations.
+Typify is a **usage-driven static type inference engine for Python** that automatically predicts precise type annotations for variables, parameters, and return values, even in largely or fully unannotated codebases.  
+This repository serves as the **official replication package** for Typify, providing datasets, command-line tooling, and evaluation scripts required to reproduce experimental results.
+
+Typify performs **multi-pass, interprocedural static analysis** driven by observed call-site behavior. Inference is resolved through **recursive fixpoint iteration** and **accumulative type unification**, enabling robust handling of real-world Python features such as generics, unions, and recursion.
 
 ---
 
-## Features
-- Usage-driven inference (based on actual call-site behavior)
-- Recursive and interprocedural analysis with fixpoint iteration
-- Support for `TypeVar`, `TypeVarTuple`, `Union`, and generic structures
-- Incremental rebuilds and global caching for large projects
-- Benchmarking tools for comparison with existing inference engines
+## Key Capabilities
+
+- **Usage-driven inference** based on concrete call-site interactions  
+- **Recursive and interprocedural analysis** with fixpoint convergence  
+- Native support for:
+  - `TypeVar` and `TypeVarTuple`
+  - `Union` and nested union structures
+  - Generic and parametric types
+- **Incremental analysis and global caching** for scalability on large projects  
+- End-to-end **benchmarking and evaluation framework**
 
 ---
 
 ## Installation
 
-You can install Typify in a fresh environment to avoid dependency conflicts.
+We recommend installing Typify in a fresh Python environment to avoid dependency conflicts.
 
 ```bash
-# Create a fresh environment
+# Create a new environment
 conda create -n typify-env python=3.9 -y
 conda activate typify-env
 
@@ -27,39 +33,153 @@ conda activate typify-env
 git clone https://github.com/typify-contributor/typify.git
 cd typify
 
-# Install
-pip install -e typify 
+# Install in editable mode
+pip install -e typify
 ```
+
 ---
 
-## Example: Running Typify on a Sample Project
+## Datasets
 
-In the `typify` directory, there is a sample project named `sample_project`:
+All datasets used in the evaluation are uploaded to Zenodo and can be accessed [here](https://zenodo.org/records/17918751).  
+The `typify-datasets.zip` file contains:
 
-We can run Typify on it as follows:
+
+- **ManyTypes4Py** (`mt4py.zip`)  
+- **Typilus** (`typilus.zip`)  
+- **Sample dataset** (`sample.zip`)  
+
+Each dataset consists of Python projects with ground-truth annotations suitable for benchmarking static type inference tools.
+
+---
+
+## Evaluation Pipeline
+
+Typify evaluation consists of three stages:
+
+1. **Ground-truth extraction**
+2. **Type inference**
+3. **Result evaluation**
+
+### 1. Ground-Truth Extraction (`typify gt`)
+
+Extracts annotated types from a dataset and produces a JSON ground-truth file.
+
+```bash
+Usage: typify gt [DATASET_DIR] [--paths-txt PATHS_TXT] [--output-types OUTPUT_TYPES]
+
+Arguments:
+  DATASET_DIR PATH       Path to the dataset directory
+
+Options:
+  --output-types PATH    Output JSON file containing extracted annotations
+  --paths-txt PATH       Optional file listing relative paths to analyze
+```
+
+---
+
+### 2. Running Typify (`typify dataset`)
+
+Runs Typify over a dataset and produces inferred type predictions.
+
+```bash
+Usage: typify dataset [DATASET_DIR] [OPTIONS]
+
+Arguments:
+  DATASET_DIR PATH       Path to the dataset directory
+
+Options:
+  --output-types PATH    Output JSON file for inferred types
+  --topn INTEGER         Number of top-ranked predictions to retain
+```
+
+---
+
+### 3. Evaluation (`typify eval`)
+
+Compares inferred types against ground truth using exact and base-type matching.
+
+```bash
+Usage: typify eval [GT_PATH] [TOOL_PATH] [--topn N]
+
+Arguments:
+  GT_PATH PATH    Ground-truth JSON file
+  TOOL_PATH PATH  Inference output JSON file
+
+Options:
+  --topn INTEGER  Evaluate using Top-N predictions (default: 1)
+```
+
+---
+
+## Example: Sample Dataset
+
+The `sample.zip` dataset contains 64 Python repositories and can be used for a quick end-to-end evaluation.
+
+```bash
+# Step 1: Extract ground truth
+typify gt '/sample' --output-types '/gt.json'
+
+# Step 2: Run Typify
+typify dataset '/sample' --output-types '/tool.json' --topn 5
+
+# Step 3: Evaluate results
+typify eval '/gt.json' '/tool.json' --topn 5
+```
+
+---
+
+## Example: ManyTypes4Py Dataset
+
+To evaluate Typify on the ManyTypes4Py dataset:
+
+```bash
+# Step 1: Ground truth extraction
+typify gt '/mt4py' --paths-txt 'mt4py-files.txt' --output-types '/gt.json'
+
+# Step 2: Run Typify
+typify dataset '/mt4py' --output-types '/tool.json' --topn 5
+
+# Step 3: Evaluation
+typify eval '/gt.json' '/tool.json' --topn 5
+```
+
+---
+
+## Running Typify on a Single Project
+
+Typify can also be applied to individual Python projects.
+
+```bash
+Usage: typify project [PROJECT_PATH] [--output-types OUTPUT_TYPES] [--topn N]
+
+Arguments:
+  PROJECT_PATH PATH      Path to a Python project
+
+Options:
+  --output-types PATH    Output JSON file for inferred types
+  --topn INTEGER         Number of top-ranked predictions
+```
+
+A small example project (`sample_project`) is included in this repository:
 
 ```bash
 typify project sample_project
 ```
 
-After completion, Typify will output inferred types in JSON format under the `sample_project/.typify/` directory. Use `typify infer --help` for more options.
+Inferred types will be written to `sample_project/.typify/`.
 
 ---
 
 ## Development Notes
 
-- Requires **Python 3.9+** environment
-- Compatible with **Linux / MacOS / Windows**
-- Compatible with both local and large-scale dataset runs
-
----
-
-## Citation
-
-Coming soon.
+- Requires **Python 3.9 or later**
+- Supported on **Linux, macOS, and Windows**
+- Designed for both **single-project analysis** and **large-scale dataset benchmarking**
 
 ---
 
 ## License
 
-Typify is released under the MIT License. See [LICENSE](LICENSE) for details.
+Typify is released under the **MIT License**.  
+See the `LICENSE` file for details.

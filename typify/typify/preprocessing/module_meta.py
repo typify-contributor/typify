@@ -243,7 +243,7 @@ class ModuleMeta:
 		if merge_buckets:
 			merged = {}
 			for b in buckets:
-				key_ = (b["name"], b["category"])
+				key_ = (b["name"], b["category"], b["scope"])
 				if key_ not in merged:
 					merged[key_] = b.copy()
 				else:
