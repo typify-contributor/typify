@@ -41,7 +41,7 @@ pip install -e typify
 
 ## Datasets
 
-All datasets used in the evaluation are uploaded to Zenodo and can be accessed [here](https://zenodo.org/records/17918751).  
+All datasets used in the evaluation are uploaded to Google Drive and can be accessed [here](https://drive.google.com/file/d/1qyeZ3SrGXuAF2qwXnv3omGaMVi9WRpWu/view?usp=sharing).  
 The `typify-datasets.zip` file contains:
 
 
