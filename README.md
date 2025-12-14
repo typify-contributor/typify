@@ -12,9 +12,10 @@ Typify performs **multi-pass, interprocedural static analysis** driven by observ
 - **Usage-driven inference** based on concrete call-site interactions  
 - **Recursive and interprocedural analysis** with fixpoint convergence  
 - Native support for:
-  - `TypeVar` and `TypeVarTuple`
-  - `Union` and nested union structures
-  - Generic and parametric types
+  - Dependency graph generation based on project structure
+  - Inference based on function call
+  - Type propagation across method calls
+  - Custom generic and parametric types
 - **Incremental analysis and global caching** for scalability on large projects  
 - End-to-end **benchmarking and evaluation framework**
 
